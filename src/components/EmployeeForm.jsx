@@ -1,13 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "../hooks/useForm";
-import { addEmployee, getEmployeeById, editEmployee } from "../services/LocalStorage";
+import {
+  addEmployee,
+  editEmployee,
+  getEmployeeById,
+} from "../services/LocalStorage";
+import { useState } from "react";
+import uuid from "react-uuid";
 
 export const EmployeeForm = () => {
   const Navigate = useNavigate();
+  // const (id ) = useParams
   const { id } = useParams();
   const [showAlert, setShowAlert] = useState(false);
-  const { Values, handleInputChange, resetForm, setForm } = useForm({
+  const [Values, handleInputChange, resetForm, setForm] = useForm({
     name: "",
     email: "",
     address: "",
@@ -23,14 +30,14 @@ export const EmployeeForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    id ? editEmployee(id, Values) : addEmployee(Values);
+    id ? editEmployee(id, Values) : addEmployee({ id: uuid(), ...Values });
     setShowAlert(true);
     // console.log(Values);
 
     resetForm();
     setTimeout(() => {
       setShowAlert(false);
-    }, 2000);
+    }, 3000);
   };
 
   return (
@@ -38,11 +45,17 @@ export const EmployeeForm = () => {
       <div className="d-flex my-5 justify-content-between">
         <button
           className="btn btn-outline-secondary"
+          style={{ width: "150px", marginLeft: "40px", fontSize: "20px" }}
           onClick={() => Navigate("/")}
         >
-          Back
+          Show User
         </button>
-        <h1>{id ? "Edit" : "Create"} Employee</h1>
+        <h1
+          className="text-center"
+          style={{ marginRight: "40px", fontSize: "30px" }}
+        >
+          {id ? "Edit" : "Create"} User
+        </h1>
       </div>
       {/* form */}
       <div className="card border-primary p-5 m-5">

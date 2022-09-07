@@ -28,3 +28,9 @@ export const editEmployee = (id, newEmployee) => {
     employees.push(newEmployee);
     localStorage["@employees"] = JSON.stringify(employees);
 }
+
+export const deleteEmployes = (id) => {
+    let employees = getListEmployee();
+    employees = employees.filter((employee) => employee.id !== id);
+    localStorage["@employees"] = JSON.stringify(employees);
+}
