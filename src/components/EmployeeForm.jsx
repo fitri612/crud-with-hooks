@@ -1,19 +1,36 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "../hooks/useForm";
+import { addEmployee, getEmployeeById, editEmployee } from "../services/LocalStorage";
 
 export const EmployeeForm = () => {
   const Navigate = useNavigate();
-  const [Values, handleInputChange, resetForm] = useForm({
+  const { id } = useParams();
+  const [showAlert, setShowAlert] = useState(false);
+  const { Values, handleInputChange, resetForm, setForm } = useForm({
     name: "",
     email: "",
     address: "",
     phone: "",
   });
 
+  useEffect(() => {
+    if (id) {
+      const employee = getEmployeeById(id);
+      setForm(employee);
+    }
+  }, [id]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(Values);
+    id ? editEmployee(id, Values) : addEmployee(Values);
+    setShowAlert(true);
+    // console.log(Values);
+
+    resetForm();
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 2000);
   };
 
   return (
@@ -21,11 +38,11 @@ export const EmployeeForm = () => {
       <div className="d-flex my-5 justify-content-between">
         <button
           className="btn btn-outline-secondary"
-          onClick={() => Navigate("./")}
+          onClick={() => Navigate("/")}
         >
           Back
         </button>
-        <h1>Add Employee</h1>
+        <h1>{id ? "Edit" : "Create"} Employee</h1>
       </div>
       {/* form */}
       <div className="card border-primary p-5 m-5">
@@ -89,13 +106,20 @@ export const EmployeeForm = () => {
               placeholder="Enter phone"
             />
           </div>
-        <div className="d-grid gap-2 mt-3">
-          <button className="btn btn-outline-primary" type="submit">
-            Submit
-          </button>
-        </div>
+          <div className="d-grid gap-2 mt-3">
+            <button className="btn btn-outline-primary" type="submit">
+              Submit
+            </button>
+          </div>
         </form>
       </div>
+      {showAlert && (
+        <div className="px-5">
+          <div className="alert alert-success text-white" role="alert">
+            Employee added successfully
+          </div>
+        </div>
+      )}
     </div>
   );
 };

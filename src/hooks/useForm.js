@@ -15,10 +15,15 @@ export const useForm = () => {
         })
     }
 
+    const setForm = (data) => {
+        setValues(data)
+    }
+
     return [
         values,
         handleInputChange,
-        resetForm
+        resetForm,
+        setForm
     ]
 
 

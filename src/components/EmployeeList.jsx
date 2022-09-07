@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getListEmployee } from '../services/LocalStorage';
 import { EmployeeItem } from './EmployeeItem'
 
 export const EmployeeList = () => {
-    const [employees, setEmployees] = React.useState([]);
+    const [employees, setEmployees] = useState([]);
 
     useEffect(() => {
         setEmployees(getListEmployee());
@@ -19,14 +19,18 @@ export const EmployeeList = () => {
                     <table className="table table-hover">
                         <thead>
                             <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Phone</th>
-                                <th scope="col">Actions</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <EmployeeItem />
+                            {
+                                employees.map((employee) => (employee.id !== 0) && <EmployeeItem key={employee.id} employee={employee} setEmployees={setEmployees} />)
+                            }
+
+                            {/* <EmployeeItem /> */}
                         </tbody>
                     </table>
                 </div>
